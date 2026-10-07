@@ -1,0 +1,19 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { business } from '~/lib/site';
+import { u } from '~/lib/utils';
+---
+
+<BaseLayout title="Page not found" description="This page does not exist." path="/404/">
+  <section class="wrap phero" aria-labelledby="page-h">
+    <div class="phero-in rev">
+      <p class="eyebrow">404</p>
+      <h1 class="d1" id="page-h">This page does not exist.</h1>
+      <p class="lead">The link may be old or typed wrong. The homepage and the contact page both work, and {business.name} is one call away at {business.phoneDisplay}.</p>
+      <div class="hero-actions">
+        <a class="btn btn-lime" href={u('/')}><span>Back to the homepage</span></a>
+        <a class="btn btn-outline" href={u('/contact/')}><span>Contact</span></a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

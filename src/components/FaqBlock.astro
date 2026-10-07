@@ -1,0 +1,19 @@
+---
+interface Faq { q: string; a: string }
+interface Props { faqs: Faq[]; heading?: string }
+const { faqs, heading } = Astro.props;
+---
+
+{faqs.length > 0 && (
+  <section class="wrap sec-tight faq-block" aria-labelledby="faq-h">
+    <h2 class="d2" id="faq-h">{heading ?? 'Common questions'}</h2>
+    <div class="faq-list">
+      {faqs.map((f) => (
+        <details class="faq-item">
+          <summary>{f.q}</summary>
+          <p set:html={f.a} />
+        </details>
+      ))}
+    </div>
+  </section>
+)}

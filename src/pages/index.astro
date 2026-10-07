@@ -1,0 +1,86 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import LeadForm from '~/components/LeadForm.astro';
+import Callout from '~/components/Callout.astro';
+import FaqBlock from '~/components/FaqBlock.astro';
+import { city, services, neighborhoods } from '~/data/city';
+import { business } from '~/lib/site';
+import { faqSchema } from '~/lib/seo';
+import { u } from '~/lib/utils';
+
+const home = city.home;
+const extra = home.faqs.length ? [faqSchema(home.faqs)] : [];
+---
+
+<BaseLayout title={home.title} description={home.desc} path="/" extraSchema={extra}>
+
+  <section class="wrap hero-home" aria-labelledby="hero-h">
+    <div class="pagehero-grid">
+      <div class="pagehero-copy rev">
+        <p class="eyebrow">{city.ui.heroEyebrow}</p>
+        <h1 class="d1" id="hero-h">{home.h1}</h1>
+        <p class="lead">{home.intro}</p>
+        <div class="hero-actions">
+          <a class="btn btn-lime" href={business.phoneHref}><span>Call {business.phoneDisplay}</span></a>
+          <a class="btn btn-outline" href={u('/services/')}><span>{city.site.niche} services</span></a>
+        </div>
+      </div>
+      <div class="rev rev-d1">
+        <LeadForm location="Homepage" />
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap sec" aria-labelledby="services-h">
+    <p class="eyebrow">{business.citySt}</p>
+    <h2 class="d2" id="services-h">{home.servicesTitle}</h2>
+    <p class="lead">{home.servicesLead}</p>
+    <div class="card-grid">
+      {services.map((s) => (
+        <a class="card" href={u(`/services/${s.slug}/`)}>
+          <h3>{s.name}</h3>
+          <p>{s.blurb}</p>
+          <span class="card-more">About {s.shortName}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap sec" aria-labelledby="areas-h">
+    <p class="eyebrow">Neighborhoods</p>
+    <h2 class="d2" id="areas-h">{home.coverageTitle}</h2>
+    <p class="lead">{home.coverageLead}</p>
+    <div class="card-grid">
+      {neighborhoods.map((n) => (
+        <a class="card" href={u(`/neighborhood/${n.slug}/`)}>
+          <h3>{n.name}</h3>
+          <p>{n.intro}</p>
+          <span class="card-more">{city.site.niche} in {n.name}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap sec" aria-labelledby="about-h">
+    <div class="split">
+      <div>
+        <p class="eyebrow">About</p>
+        <h2 class="d2" id="about-h">{home.aboutTitle}</h2>
+        <p class="lead">{home.aboutLead}</p>
+        <a class="btn btn-outline" href={u('/about/')}><span>About {business.name}</span></a>
+      </div>
+      <div>
+        <h3 class="d3" id="steps-h">{home.stepsTitle}</h3>
+        <ol class="steps">
+          {home.steps.map((s) => <li><strong>{s.t}</strong><span>{s.d}</span></li>)}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <FaqBlock faqs={home.faqs} heading={home.faqHeading} />
+
+  <p class="wrap foot-links" set:html={home.footerLinksHtml} />
+
+  <Callout title={home.calloutTitle} text={home.calloutText} />
+</BaseLayout>

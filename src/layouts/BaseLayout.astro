@@ -1,0 +1,84 @@
+---
+import '~/styles/global.css';
+import JsonLd from '~/components/JsonLd.astro';
+import Header from '~/components/Header.astro';
+import Footer from '~/components/Footer.astro';
+import { SITE_URL, business } from '~/lib/site';
+import { pageSchema } from '~/lib/seo';
+import { city, isPlaceholder } from '~/data/city';
+import { u } from '~/lib/utils';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Root-relative path, used for the canonical URL and schema. */
+  path: string;
+  crumbs?: { name: string; path: string }[];
+  extraSchema?: Record<string, unknown>[];
+  service?: boolean;
+  bodyClass?: string;
+}
+
+const { title, description, path, crumbs = [], extraSchema = [], service = false, bodyClass } = Astro.props;
+const canonical = `${SITE_URL}${path}`;
+
+/* Theme tokens: only real values override the stylesheet defaults, so the
+   token preview keeps its look while a real site can re-skin from its data file. */
+const t = city.theme;
+const real = (v: string) => v && !v.includes('{');
+const themeCss = [
+  real(t.accent) && `--swp-lime:${t.accent}`,
+  real(t.accentDeep) && `--swp-lime-deep:${t.accentDeep}`,
+  real(t.ink) && `--swp-ink:${t.ink}`,
+  real(t.mist) && `--swp-mist:${t.mist}`,
+].filter(Boolean).join(';');
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={real(t.ink) ? t.ink : '#101110'} />
+    {isPlaceholder
+      ? <meta name="robots" content="noindex, follow" />
+      : <link rel="canonical" href={canonical} />}
+    <link rel="icon" href={u('/favicon.svg')} type="image/svg+xml" />
+    <link rel="preload" href={u('/fonts/space-grotesk-latin.woff2')} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={u('/fonts/inter-tight-latin.woff2')} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    {themeCss && <style is:inline set:html={`:root{${themeCss}}`} />}
+    <JsonLd data={pageSchema(path, title, description, crumbs, service)} />
+    {extraSchema.map((s) => <JsonLd data={s} />)}
+  </head>
+
+  <body class={bodyClass}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="swp-shell">
+      <Header />
+      <main id="main"><slot /></main>
+      <Footer />
+    </div>
+
+    <a class="sticky-call" href={business.phoneHref} aria-label={`Call ${business.name} at ${business.phoneDisplay}`}>
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.4 15.4 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1.1-.3 1.2.4 2.5.6 3.9.6.6 0 1 .4 1 1v3.5c0 .6-.4 1-1 1C10.8 21 3 13.2 3 3.6c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.4.2 2.7.6 3.9.1.4 0 .8-.3 1.1l-2.2 2.2z"/></svg>
+      <span>{business.phoneDisplay}</span>
+    </a>
+
+    <script>import '~/scripts/lead-form.js';</script>
+    <script is:inline defer src="https://api.airchatty.com/js/external-tracking.js" data-tracking-id={city.site.airchattyTrackingId}></script>
+  </body>
+</html>

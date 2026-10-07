@@ -1,0 +1,25 @@
+---
+import LeadForm from './LeadForm.astro';
+
+interface Props {
+  eyebrow?: string;
+  h1: string;
+  intro?: string;
+  /** page_location value recorded by the form. */
+  formLocation: string;
+}
+const { eyebrow, h1, intro, formLocation } = Astro.props;
+---
+
+<section class="wrap phero pagehero" aria-labelledby="page-h">
+  <div class="pagehero-grid">
+    <div class="pagehero-copy rev">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h1 class="d1" id="page-h">{h1}</h1>
+      {intro && <p class="lead">{intro}</p>}
+    </div>
+    <div class="rev rev-d1">
+      <LeadForm location={formLocation} />
+    </div>
+  </div>
+</section>

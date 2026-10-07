@@ -1,0 +1,30 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import Sections from '~/components/Sections.astro';
+import FaqBlock from '~/components/FaqBlock.astro';
+import Callout from '~/components/Callout.astro';
+import { city, guides, C } from '~/data/city';
+import { faqSchema } from '~/lib/seo';
+
+export function getStaticPaths() {
+  return guides.map((g) => ({ params: { slug: g.slug }, props: { guide: g } }));
+}
+const { guide } = Astro.props;
+const page = C[guide.slug];
+const path = `/guides/${guide.slug}/`;
+const extra = page.faqs.length ? [faqSchema(page.faqs)] : [];
+---
+
+<BaseLayout
+  title={page.title}
+  description={page.desc}
+  path={path}
+  crumbs={[{ name: 'Guides', path: '/guides/' }, { name: guide.name, path }]}
+  extraSchema={extra}
+>
+  <PageHero eyebrow="Guides" h1={page.h1} intro={page.intro} formLocation={`Guide: ${guide.name}`} />
+  <Sections blocks={page.sections} />
+  <FaqBlock faqs={page.faqs} />
+  <Callout title={city.ui.calloutTitle} text={city.ui.calloutText} />
+</BaseLayout>

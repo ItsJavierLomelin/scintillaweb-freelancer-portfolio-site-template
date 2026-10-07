@@ -1,0 +1,16 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import Sections from '~/components/Sections.astro';
+import Callout from '~/components/Callout.astro';
+import { city, C } from '~/data/city';
+
+const idx = city.indexPages.about;
+const page = C.about;
+---
+
+<BaseLayout title={idx.title} description={idx.desc} path="/about/" crumbs={[{ name: 'About', path: '/about/' }]}>
+  <PageHero eyebrow="About" h1={page.h1} intro={page.intro} formLocation="About Page" />
+  <Sections blocks={page.sections} />
+  <Callout title={city.ui.calloutTitle} text={city.ui.calloutText} />
+</BaseLayout>

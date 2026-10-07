@@ -1,0 +1,56 @@
+---
+import { business, serviceLinks, hoodLinks, guideLinks } from '~/lib/site';
+import { city } from '~/data/city';
+import { u } from '~/lib/utils';
+const year = new Date().getFullYear();
+---
+
+<footer class="ftr">
+  <div class="wrap ftr-top">
+    <div>
+      <a class="ftr-brand" href={u('/')} aria-label={`${business.name} home`}>
+        <img src={u(city.site.logoFooter)} alt={business.name} width="64" height="64" loading="lazy" decoding="async" />
+      </a>
+      <p class="ftr-about">{business.description}</p>
+    </div>
+
+    <nav aria-labelledby="ftr-services">
+      <h2 id="ftr-services">Services</h2>
+      <ul class="ftr-links">
+        {serviceLinks.map((l) => <li><a href={u(l.href)}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="ftr-areas">
+      <h2 id="ftr-areas">Neighborhoods</h2>
+      <ul class="ftr-links">
+        {hoodLinks.map((l) => <li><a href={u(l.href)}>{l.label}</a></li>)}
+      </ul>
+      <h2 class="ftr-gap">Guides</h2>
+      <ul class="ftr-links">
+        {guideLinks.map((l) => <li><a href={u(l.href)}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <h2>Contact</h2>
+      <div class="ftr-cbox">
+        <span><a href={business.phoneHref}>{business.phoneDisplay}</a></span>
+      </div>
+      <div class="ftr-cbox">
+        <span>{business.citySt}</span>
+      </div>
+      <div class="ftr-cbox">
+        <span><a href={u('/contact/')}>Request service</a></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap ftr-bot">
+    <p>&copy; {year} {business.name}. No service or result is guaranteed.</p>
+    <nav aria-label="Legal">
+      <a href={u('/privacy/')}>Privacy</a>
+      <a href={u('/terms/')}>Terms</a>
+    </nav>
+  </div>
+</footer>

@@ -1,0 +1,13 @@
+---
+interface Block { h: string; ps?: string[] }
+interface Props { blocks: Block[] }
+const { blocks } = Astro.props;
+const render = (s: string) => s;
+---
+
+{blocks.map((b) => (
+  <section class="wrap sec-tight body-section" aria-labelledby={undefined}>
+    <h2 class="d3">{b.h}</h2>
+    {(b.ps ?? []).map((p) => <p class="body-p" set:html={render(p)} />)}
+  </section>
+))}

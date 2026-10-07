@@ -1,0 +1,25 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import Callout from '~/components/Callout.astro';
+import { city, services } from '~/data/city';
+import { u } from '~/lib/utils';
+
+const idx = city.indexPages.services;
+---
+
+<BaseLayout title={idx.title} description={idx.desc} path="/services/" crumbs={[{ name: 'Services', path: '/services/' }]}>
+  <PageHero eyebrow="Services" h1={idx.h1} intro={idx.intro} formLocation="Services Hub" />
+  <section class="wrap sec" aria-label="All services">
+    <div class="card-grid">
+      {services.map((s) => (
+        <a class="card" href={u(`/services/${s.slug}/`)}>
+          <h3>{s.name}</h3>
+          <p>{s.blurb}</p>
+          <span class="card-more">About {s.shortName}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+  <Callout title={city.ui.calloutTitle} text={city.ui.calloutText} />
+</BaseLayout>

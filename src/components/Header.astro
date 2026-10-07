@@ -1,0 +1,90 @@
+---
+import { navLinks, business } from '~/lib/site';
+import { city } from '~/data/city';
+import { u } from '~/lib/utils';
+const path = Astro.url.pathname;
+const base = import.meta.env.BASE_URL;
+const rel = path.startsWith(base) ? path.slice(base.length - 1) : path;
+const isHome = rel === '/' || rel === '';
+function state(href: string) {
+  if (href === '/') return isHome ? 'page' : null;
+  if (rel === href) return 'page';
+  return rel.startsWith(href) ? 'section' : null;
+}
+const chevron = '<svg class="nav-chevron" aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="m2 4 4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+---
+
+<header class="hdr" id="top">
+  <div class="wrap hdr-in">
+    <a class="brand" href={u('/')} aria-label={`${business.name} home`}>
+      <img src={u(city.site.logoHeader)} alt={business.name} width="64" height="64" fetchpriority="high" decoding="async" />
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      {navLinks.map((l) => {
+        const s = state(l.href);
+        return (
+          <div class="nav-item">
+            <a
+              href={u(l.href)}
+              aria-current={s === 'page' ? 'page' : undefined}
+              class:list={[s === 'section' && 'is-section', 'children' in l && 'has-dropdown']}
+            >
+              {l.label}{'children' in l && <Fragment set:html={chevron} />}
+            </a>
+            {'children' in l && (
+              <div class="nav-sub"><div class="nav-sub-inner">
+                {l.children.map((a) => <a href={u(a.href)}>{a.label}</a>)}
+              </div></div>
+            )}
+          </div>
+        );
+      })}
+    </nav>
+
+    <a class="btn btn-ink hdr-cta" href={u('/contact/')}><span>Request Service</span></a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mnav">
+      <svg class="mh" aria-hidden="true" focusable="false" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      <svg class="mx" aria-hidden="true" focusable="false" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+
+  <div class="mnav" id="mnav">
+    <nav aria-label="Mobile">
+      {navLinks.map((l) => (
+        <>
+          <a href={u(l.href)}>{l.label}</a>
+          {'children' in l && l.children.map((a) => <a class="msub" href={u(a.href)}>{a.label}</a>)}
+        </>
+      ))}
+    </nav>
+    <a class="btn btn-ink" href={u('/contact/')}><span>Request Service</span></a>
+    <a class="mcall" href={business.phoneHref}>Call {business.phoneDisplay}</a>
+  </div>
+</header>
+
+<script>
+  const burger = document.getElementById('burger');
+  const panel = document.getElementById('mnav');
+  if (burger && panel) {
+    const setOpen = (open: boolean) => {
+      panel.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    burger.addEventListener('click', () => {
+      const open = !panel.classList.contains('open');
+      setOpen(open);
+      if (open) panel.querySelector<HTMLAnchorElement>('a')?.focus();
+    });
+    panel.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && panel.classList.contains('open')) { setOpen(false); burger.focus(); }
+    });
+    const wide = window.matchMedia('(min-width: 1001px)');
+    wide.addEventListener('change', (e) => { if (e.matches) setOpen(false); });
+  }
+</script>

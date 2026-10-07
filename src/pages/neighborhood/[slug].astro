@@ -1,0 +1,66 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import Sections from '~/components/Sections.astro';
+import FaqBlock from '~/components/FaqBlock.astro';
+import { city, neighborhoods, services } from '~/data/city';
+import { faqSchema } from '~/lib/seo';
+import { u } from '~/lib/utils';
+
+export function getStaticPaths() {
+  return neighborhoods.map((n) => ({ params: { slug: n.slug }, props: { hood: n } }));
+}
+const { hood } = Astro.props;
+const path = `/neighborhood/${hood.slug}/`;
+const extra = hood.faqs.length ? [faqSchema(hood.faqs)] : [];
+const showMap = hood.mapSrc && !hood.mapSrc.includes('{');
+---
+
+<BaseLayout
+  title={hood.title}
+  description={hood.description}
+  path={path}
+  crumbs={[{ name: 'Neighborhoods', path: '/neighborhood/' }, { name: hood.name, path }]}
+  extraSchema={extra}
+>
+  <PageHero eyebrow="Neighborhoods" h1={hood.h1} intro={hood.hero} formLocation={`Neighborhood: ${hood.name}`} />
+
+  <section class="wrap sec" aria-labelledby="hood-services-h">
+    <h2 class="d2" id="hood-services-h">{hood.servicesTitle}</h2>
+    <p class="lead">{hood.servicesLead}</p>
+    <div class="card-grid">
+      {services.map((s) => (
+        <a class="card" href={u(`/services/${s.slug}/`)}>
+          <h3>{s.name}</h3>
+          <p>{s.note}</p>
+          <span class="card-more">{s.shortName} in {hood.name}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <Sections blocks={hood.body} />
+
+  {showMap && (
+    <section class="wrap sec-tight" aria-label={`Map of ${hood.mapLabel}`}>
+      <p class="lead">{hood.mapIntro}</p>
+      <div class="map-embed">
+        <iframe src={hood.mapSrc} title={hood.mapLabel} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+    </section>
+  )}
+
+  <FaqBlock faqs={hood.faqs} />
+
+  <section class="wrap sec-tight" aria-labelledby="cta-h">
+    <div class="cta rev">
+      <span class="cta-ring a" aria-hidden="true"></span>
+      <span class="cta-ring b" aria-hidden="true"></span>
+      <h2 class="d2" id="cta-h">{hood.cta}</h2>
+      <p>{hood.ctaP}</p>
+      <div class="cta-actions">
+        <a class="btn btn-ink" href={u('/contact/')}><span>Request service</span></a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,18 @@
+{
+  "name": "scintillaweb-freelancer-portfolio-site-template",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "description": "Home-service lead-gen site template. Design adapted from the MIT-licensed SWP Freelancer Portfolio Astro theme by Scintillaweb.",
+  "license": "MIT",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.3"
+  }
+}

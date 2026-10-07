@@ -1,0 +1,26 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PageHero from '~/components/PageHero.astro';
+import { city } from '~/data/city';
+import { business } from '~/lib/site';
+
+const idx = city.indexPages.contact;
+---
+
+<BaseLayout title={idx.title} description={idx.desc} path="/contact/" crumbs={[{ name: 'Contact', path: '/contact/' }]}>
+  <PageHero eyebrow="Contact" h1={idx.h1} intro={idx.intro} formLocation="Contact Page" />
+  <section class="wrap sec-tight" aria-label="Direct contact">
+    <div class="card-grid">
+      <a class="card" href={business.phoneHref}>
+        <h3>Call</h3>
+        <p>{business.phoneDisplay}</p>
+        <span class="card-more">Fastest way to reach {business.name}</span>
+      </a>
+      <div class="card">
+        <h3>Where</h3>
+        <p>{business.citySt}</p>
+        <span class="card-more">{city.site.niche} across {business.city} and nearby neighborhoods</span>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

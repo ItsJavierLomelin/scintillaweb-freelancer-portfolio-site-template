@@ -1,0 +1,45 @@
+---
+import { city } from '~/data/city';
+import { business } from '~/lib/site';
+
+interface Props {
+  /** Value recorded in the page_location field, e.g. "Homepage" or "Service: Service One". */
+  location?: string;
+  heading?: string;
+}
+
+const { location = 'Homepage', heading = 'Request service' } = Astro.props;
+const formName = `${city.site.brand.replace(/[{}]/g, '').replace(/[^a-z0-9]+/gi, '-')}-Form`;
+---
+
+<aside class="form-card" aria-label="Request service form">
+  <div class="form-card-head">
+    <h2>{heading}</h2>
+    <p>Share the details and we will follow up. Prefer to talk? Call <a href={business.phoneHref}>{business.phoneDisplay}</a>.</p>
+  </div>
+  <form class="request-form" data-lead-form data-niche={city.ui.successNiche} id={formName} name={formName}>
+    <input class="honeypot" aria-hidden="true" tabindex="-1" type="text" readonly name="page_site" value={business.name} />
+    <input class="honeypot" aria-hidden="true" tabindex="-1" type="text" readonly name="page_location" value={location} />
+    <input class="honeypot" aria-hidden="true" tabindex="-1" type="text" readonly name="page_code" value={city.site.pageCode} />
+    <div class="field">
+      <label for={`${formName}-name`}>Your name</label>
+      <input id={`${formName}-name`} name="full_name" type="text" autocomplete="name" placeholder="Your name" required />
+    </div>
+    <div class="field">
+      <label for={`${formName}-phone`}>Phone number</label>
+      <input id={`${formName}-phone`} name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Best number to reach you" required />
+    </div>
+    <div class="field">
+      <label for={`${formName}-email`}>Email address</label>
+      <input id={`${formName}-email`} name="email" type="email" autocomplete="email" placeholder="Email address" />
+    </div>
+    <div class="field">
+      <label for={`${formName}-details`}>What is happening?</label>
+      <textarea id={`${formName}-details`} name="page_details" rows="4" placeholder="Tell us what is going on and where." required></textarea>
+    </div>
+    <label aria-hidden="true" class="honeypot">Leave this blank<input name="website" tabindex="-1" autocomplete="off" /></label>
+    <div class="form-status" role="status" aria-live="polite"></div>
+    <button class="btn btn-lime form-submit" type="submit"><span>Request a call</span></button>
+    <small class="form-note">{city.ui.formNote}</small>
+  </form>
+</aside>

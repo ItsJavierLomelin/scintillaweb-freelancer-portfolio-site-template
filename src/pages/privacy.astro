@@ -1,0 +1,16 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Sections from '~/components/Sections.astro';
+import { C } from '~/data/city';
+const page = C.privacy;
+---
+
+<BaseLayout title={page.title} description={page.desc} path="/privacy/" crumbs={[{ name: 'Privacy', path: '/privacy/' }]}>
+  <section class="wrap phero" aria-labelledby="page-h">
+    <div class="phero-in rev">
+      <h1 class="d1" id="page-h">{page.h1}</h1>
+      <p class="lead">{page.intro}</p>
+    </div>
+  </section>
+  <Sections blocks={page.sections} />
+</BaseLayout>
