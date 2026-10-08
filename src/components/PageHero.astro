@@ -1,5 +1,6 @@
 ---
 import LeadForm from './LeadForm.astro';
+import { u } from '~/lib/utils';
 
 interface Props {
   eyebrow?: string;
@@ -7,13 +8,20 @@ interface Props {
   intro?: string;
   /** page_location value recorded by the form. */
   formLocation: string;
+  image?: string;
+  imageAlt?: string;
 }
-const { eyebrow, h1, intro, formLocation } = Astro.props;
+const { eyebrow, h1, intro, formLocation, image, imageAlt } = Astro.props;
+const path = Astro.url.pathname;
+const showPhoto = !/\/(privacy|terms)\/?$/.test(path);
+const photo = image || (path.includes('guides') ? '7-kitchen-faucet' : path.includes('repair') || path.includes('about') ? '6-heating-maintenance' : '5-pipe-installation');
+const alt = imageAlt || ({'7-kitchen-faucet': 'Kitchen faucet over a stainless steel sink', '6-heating-maintenance': 'Gloved hands checking heating-system equipment', '5-pipe-installation': 'Hands connecting metal plumbing pipes'}[photo] || 'Plumbing equipment');
 ---
 
 <section class="wrap phero pagehero" aria-labelledby="page-h">
   <div class="pagehero-grid">
     <div class="pagehero-copy rev">
+      {showPhoto && <img class="hero-photo" src={u(`/images/${photo}.webp`)} alt={alt} width="1125" height="750" fetchpriority="high" />}
       {eyebrow && <p class="eyebrow">{eyebrow}</p>}
       <h1 class="d1" id="page-h">{h1}</h1>
       {intro && <p class="lead">{intro}</p>}
