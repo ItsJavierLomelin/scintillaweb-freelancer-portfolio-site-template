@@ -17,6 +17,7 @@ const extra = home.faqs.length ? [faqSchema(home.faqs)] : [];
   <section class="wrap hero-home" aria-labelledby="hero-h">
     <div class="pagehero-grid">
       <div class="pagehero-copy rev">
+        <img class="hero-photo" src={u('/images/5-pipe-installation.webp')} alt="Hands connecting metal plumbing pipes" width="1125" height="750" fetchpriority="high" />
         <p class="eyebrow">{city.ui.heroEyebrow}</p>
         <h1 class="d1" id="hero-h">{home.h1}</h1>
         <p class="lead">{home.intro}</p>
@@ -38,6 +39,7 @@ const extra = home.faqs.length ? [faqSchema(home.faqs)] : [];
     <div class="card-grid">
       {services.map((s) => (
         <a class="card" href={u(`/services/${s.slug}/`)}>
+          <img class="card-photo" src={u(`/images/${['6-heating-maintenance', '5-pipe-installation', '7-kitchen-faucet'][services.indexOf(s) % 3]}.webp`)} alt={['Hands checking heating equipment', 'Metal pipe installation', 'Kitchen faucet over a sink'][services.indexOf(s) % 3]} width="1125" height="750" loading="lazy" decoding="async" />
           <h3>{s.name}</h3>
           <p>{s.blurb}</p>
           <span class="card-more">About {s.shortName}</span>
@@ -70,6 +72,7 @@ const extra = home.faqs.length ? [faqSchema(home.faqs)] : [];
         <a class="btn btn-outline" href={u('/about/')}><span>About {business.name}</span></a>
       </div>
       <div>
+        <img class="about-photo" src={u('/images/6-heating-maintenance.webp')} alt="Gloved hands checking heating-system equipment" width="1125" height="750" loading="lazy" decoding="async" />
         <h3 class="d3" id="steps-h">{home.stepsTitle}</h3>
         <ol class="steps">
           {home.steps.map((s) => <li><strong>{s.t}</strong><span>{s.d}</span></li>)}
